@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Painel de Controle PID</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Painel de Controle PID</h1>
+        <p>Sistema de monitoramento e controle de posição</p>
+    </header>
+
+    <div class="grid-layout">
+        <!-- Coluna Esquerda -->
+        <section class="coluna-esq">
+            <div class="card">
+                <h3 class="section-title">CONFIGURAÇÃO PID</h3>
+                
+                <div class="control-group">
+                    <label>MODO DE CONTROLE</label>
+                    <div class="mode-toggle">
+                        <button id="btn-aberta" class="toggle-btn active" onclick="setMode('Malha Aberta')">Malha Aberta</button>
+                        <button id="btn-fechada" class="toggle-btn" onclick="setMode('Malha Fechada')">Malha Fechada</button>
+                    </div>
+                </div>
+
+                <div class="control-group" id="tipo-controle-group" style="display: none;">
+                    <label>TIPO DE CONTROLADOR</label>
+                    <select id="tipo-pid" class="modern-select">
+                        <option value="P">P</option><option value="I">I</option><option value="D">D</option>
+                        <option value="PI">PI</option><option value="PD">PD</option><option value="PID" selected>PID</option>
+                    </select>
+                </div>
+
+                <div class="control-group box-outline">
+                    <div class="flex-between">
+                        <label>Setpoint (Alvo)<br><small style="color:#718096; font-weight:normal;">Posição linear de referência</small></label>
+                        <div class="value-pill"><span id="valSet">0.0</span> cm</div>
+                    </div>
+                    <input type="range" id="setpoint" min="0" max="100" step="0.5" value="0">
+                    <div class="flex-between slider-labels">
+                        <span>0.0 cm</span><span>Faixa de Operação: 0 - 100 cm</span><span>100.0 cm</span>
+                    </div>
+                </div>
+
+                <h4 class="sub-section-title">GANHOS DO CONTROLADOR</h4>
+                <div class="gains-grid">
+                    <div class="gain-box box-outline">
+                        <div class="flex-between"><label>Ganho Kp</label><span id="valKp" class="val-bold">0.00</span></div>
+                        <input type="range" id="kp" min="0" max="10" step="0.01" value="0">
+                        <div class="slider-labels text-right"><span>Máx: 10.0</span></div>
+                    </div>
+                    <div class="gain-box box-outline">
+                        <div class="flex-between"><label>Ganho Ki</label><span id="valKi" class="val-bold">0.00</span></div>
+                        <input type="range" id="ki" min="0" max="5" step="0.01" value="0">
+                        <div class="slider-labels text-right"><span>Máx: 5.00</span></div>
+                    </div>
+                    <div class="gain-box box-outline">
+                        <div class="flex-between"><label>Ganho Kd</label><span id="valKd" class="val-bold">0.00</span></div>
+                        <input type="range" id="kd" min="0" max="5" step="0.01" value="0">
+                        <div class="slider-labels text-right"><span>Máx: 5.00</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card command-section">
+                <h3 class="section-title">COMANDOS</h3>
+                <div class="btn-group">
+                    <button class="btn btn-start" onclick="enviarComando('iniciar')">▶ Iniciar Experimento</button>
+                    <button class="btn btn-stop" onclick="enviarComando('parar')">✋ Parar Robô</button>
+                    <button class="btn btn-reset" onclick="enviarComando('reiniciar')">🔄 Reiniciar Odometria</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Coluna Direita -->
+        <section class="coluna-dir">
+            <div class="card">
+                <div class="flex-between align-center mb-20">
+                    <h3 class="section-title m-0">Monitoramento em<br>Tempo Real</h3>
+                    <div class="status-pill" id="status-pill">
+                        <span class="status-dot"></span> Status:<br><strong id="statusRobo">Aguardando...</strong>
+                    </div>
+                </div>
+
+                <div class="monitor-grid">
+                    <div class="monitor-box box-outline">
+                        <label>POSIÇÃO ATUAL</label>
+                        <div class="monitor-value"><span id="posicao">0.00</span> <span class="unit">cm</span></div>
+                    </div>
+                    <div class="monitor-box box-outline">
+                        <label>ERRO</label>
+                        <div class="monitor-value"><span id="erro">0.00</span> <span class="unit">cm</span></div>
+                    </div>
+                </div>
+
+                <div class="box-outline mt-20">
+                    <div class="flex-between">
+                        <label>VELOCIDADE (PWM)</label>
+                        <span id="vel" class="val-bold text-xl">0</span>
+                    </div>
+                    <input type="range" disabled min="0" max="255" value="0" id="vel-bar" style="accent-color: #718096;">
+                    <div class="flex-between slider-labels">
+                        <span>0 (Repouso)</span><span>Intensidade Atuador</span><span>255 (Máx)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
